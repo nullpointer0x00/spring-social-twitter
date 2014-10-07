@@ -44,6 +44,7 @@ public class Tweet extends TwitterObject implements Serializable {
 	private Integer favoriteCount;
 	private Entities entities;
 	private TwitterProfile user;
+	private Place place;
 
 	public Tweet(long id, String text, Date createdAt, String fromUser, String profileImageUrl, Long toUserId, long fromUserId, String languageCode, String source) {
 		this.id = id;
@@ -249,6 +250,14 @@ public class Tweet extends TwitterObject implements Serializable {
 	public void setInReplyToScreenName(final String inReplyToScreenName) {
 		this.inReplyToScreenName = inReplyToScreenName;
 	}
+	
+	public Place getPlace() {
+		return place;
+	}
+
+	public void setPlace(Place place) {
+		this.place = place;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -312,7 +321,9 @@ public class Tweet extends TwitterObject implements Serializable {
 		if (user != null ? !user.equals(tweet.user) : tweet.user != null) {
 			return false;
 		}
-	
+		if (place != null ? !place.equals(tweet.place) : tweet.place != null) {
+			return false;
+		}
 		return true;
 	}
 
@@ -335,6 +346,7 @@ public class Tweet extends TwitterObject implements Serializable {
 		result = 31 * result + (retweetedStatus != null ? retweetedStatus.hashCode() : 0);
 		result = 31 * result + (entities != null ? entities.hashCode() : 0);
 		result = 31 * result + (user != null ? user.hashCode() : 0);
+		result = 31 * result + (place != null ? place.hashCode() : 0);
 		return result;
 	}
 }

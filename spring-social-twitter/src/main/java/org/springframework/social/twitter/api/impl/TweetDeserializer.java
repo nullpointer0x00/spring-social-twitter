@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.social.twitter.api.Entities;
+import org.springframework.social.twitter.api.Place;
 import org.springframework.social.twitter.api.TickerSymbolEntity;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.TwitterProfile;
@@ -97,6 +98,8 @@ class TweetDeserializer extends JsonDeserializer<Tweet> {
 		tweet.setFavoriteCount(favoriteCount);
 		Entities entities = toEntities(node.get("entities"), text);
 		tweet.setEntities(entities);
+		Place place = toPlace(node.get("place"));
+		tweet.setPlace(place);
 		TwitterProfile user = toProfile(fromUserNode);
 		tweet.setUser(user);
 		return tweet;
@@ -140,6 +143,14 @@ class TweetDeserializer extends JsonDeserializer<Tweet> {
 			String url = "https://twitter.com/search?q=%24" + tickerSymbol + "&src=ctag";
 			entities.getTickerSymbols().add(new TickerSymbolEntity(tickerSymbol, url, new int[] {matchResult.start(), matchResult.end()}));
 		}
+	}
+	
+	private Place toPlace(final JsonNode node) throws IOException {
+		if (null == node || node.isNull() || node.isMissingNode()) {
+			return null;
+		}
+		final ObjectMapper mapper = this.createMapper();
+		return mapper.reader(Place.class).readValue(node);
 	}
 
 
